@@ -6,9 +6,9 @@ import {
     NavLink
   } from "react-router-dom";
 
-  import Dashboard from "./Modules/Dashboard/Dashboard";
-  import Posts from "./Modules/Posts/Posts";
-  import Settings from "./Modules/Settings/Settings";
+import Dashboard from "./Modules/Dashboard/Dashboard";
+import Posts from "./Modules/Posts/Posts";
+import Settings from "./Modules/Settings/Settings";
 
 import Breadcrumb from "./Modules/Components/Breadcrumb";  
 

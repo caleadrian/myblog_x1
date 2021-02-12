@@ -3,6 +3,8 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertFromRaw, convertToRaw, ContentState, convertFromHTML } from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html'; 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import TagsInput from 'react-tagsinput'
+import './tags.css'
 
 export default class AddPost extends Component {
 
@@ -10,17 +12,36 @@ export default class AddPost extends Component {
         super(props);
         this.state = {
           editorState: EditorState.createEmpty(),
-          content: 'blank',
-          data: ''
-        };
+          post : {
+              title: '',
+              content: '',
+              status: 'draft',
+              tags: [],
+              createdById: 1207
+          }
+        }
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentDidMount(){
+
+    }
+
+
     onEditorStateChange = (editorState) => {
+        var convertedData = convertToRaw(this.state.editorState.getCurrentContent());
+
         this.setState({
-          editorState,
+            editorState,
+            post:{
+                ...this.state.post,
+                content: convertedData,
+            }
         });
 
-    };
+    }
 
     convertCommentFromJSONToHTML = (text) => {                     
         return stateToHTML(convertFromRaw(text)) 
@@ -56,38 +77,96 @@ export default class AddPost extends Component {
             ))
         })
     }
-    
+
+    handleChange = (e) => {
+        this.setState({
+            post: {
+                ...this.state.post,
+                title: e.target.value
+            }
+        })
+    }
+
+    handleSubmit = (e) =>{
+        e.preventDefault()
+
+        this.props.savePost(this.state.post)
+
+        this.clearData()
+    }
+
+    handleTagsChange =(tags) => {
+        this.setState({
+            post: {
+                ...this.state.post,
+                tags : tags
+            }
+        })
+    }
+
+    clearData = () =>{
+        this.setState({
+            post: {
+                ...this.state.post,
+                tags: [],
+                title: '',
+            }
+        })
+    }
 
     render(){
         return(
             <React.Fragment>
-        
-                <p>Cale</p>
-                <Editor
-                    editorState={this.state.editorState}
-                    toolbarClassName="toolbarClassName"
-                    wrapperClassName="wrapperClassName"
-                    editorClassName="editorClassName"
-                    onEditorStateChange={this.onEditorStateChange}
-                    toolbar={{
-                        options: ['inline', 'list','colorPicker', 'link', 'emoji', 'image'],
-                        inline: { inDropdown: true },
-                        list: { inDropdown: true },
-                        link: { inDropdown: true },
-                        history: { inDropdown: true },
-                      }}
-                />
+                <button type="button" onClick={ this.props.showPostsBtn }
+                    className="btn btn-sm btn-danger rounded-pill mb-2 px-3">Cancel</button>
 
-                <hr />
+                <form onSubmit={ this.handleSubmit }>
 
-                <div dangerouslySetInnerHTML={{ __html: this.state.content}} /> 
+                <div className="form-group mb-3">
+                    <label className="text-muted">Title</label>
+                    <input type="text" value={this.state.post.title} onChange={this.handleChange} 
+                        className="form-control" placeholder="Enter your title here..."/>
+                </div>
 
-                <hr />
+                <div className="form-group mb-3">
 
-                <button onClick={this.loadData} type="button" className="btn btn-primary rounded-pill">Load Data</button>
-                <button onClick={this.saveData} type="button" className="btn btn-primary rounded-pill">Save Data</button>
-                <button onClick={this.editData} type="button" className="btn btn-success rounded-pill">Load to editor</button>
+                    <label className="text-muted">Content</label>
+                    <Editor
+                        editorState={this.state.editorState}
+                        toolbarClassName="form-control"
+                        wrapperClassName="wrapperClassName"
+                        editorClassName="form-control border-muted"
+                        
+                        onEditorStateChange={this.onEditorStateChange}
+                        toolbar={{
+                            options: ['inline', 'list','colorPicker', 'link', 'emoji', 'image'],
+                            // inline: { inDropdown: true },
+                            // list: { inDropdown: true },
+                            // link: { inDropdown: true },
+                            // history: { inDropdown: true },
+                        }}
+                    />
+                </div>
+                    
+
+                <div className="form-group mb-2"> 
+                    <label className="text-muted">Tags</label>
+                    <TagsInput 
+                        className="form-control"
+                        value={this.state.post.tags} 
+                        onChange={this.handleTagsChange} 
+                        onlyUnique={true}
+                        /> 
+                   
+                </div>
+
+                {/* <div dangerouslySetInnerHTML={{ __html: this.state.content}} />  */}
+
+                {/* <button onClick={this.loadData} type="button" className="btn btn-primary rounded-pill">Load Data</button> */}
+                <button onClick={this.saveData} type="submit" className="btn btn-primary rounded-pill">Save Data</button>
                 
+                </form>
+
             </React.Fragment>
          );
     }
