@@ -5,10 +5,11 @@ import {stateToHTML} from 'draft-js-export-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import TagsInput from 'react-tagsinput'
 import './tags.css'
+import firebaseDB from '../../../firebase'
 
 export default class AddPost extends Component {
 
-    constructor(props) {
+    constructor(props){
         super(props);
         this.state = {
           editorState: EditorState.createEmpty(),
@@ -26,6 +27,32 @@ export default class AddPost extends Component {
     }
 
     componentDidMount(){
+        this.getDataById(this.props.postId)
+    }
+
+
+
+    getDataById = (id) =>{
+        var arr = [];
+        firebaseDB.child('posts').orderByChild('id').equalTo(id)
+            .on('value', snapshot =>{
+            if (snapshot.exists()) {
+                arr = snapshot.val()
+
+
+                 console.log(arr)
+
+                // this.setState({
+                //     post: {
+                //         tags: array
+                //     }
+                // })
+
+              }
+              else {
+                console.log("No data available");
+              }
+        })
     }
 
 
@@ -110,7 +137,8 @@ export default class AddPost extends Component {
     render(){
         return(
             <React.Fragment>
-                <button type="button" onClick={ this.props.showPostsBtn }
+
+                <button type="button" onClick={this.props.showPostsBtn}
                     className="btn btn-sm btn-danger rounded-pill mb-2 px-3">Cancel</button>
 
                 <form onSubmit={ this.handleSubmit }>
@@ -133,10 +161,6 @@ export default class AddPost extends Component {
                         onEditorStateChange={this.onEditorStateChange}
                         toolbar={{
                             options: ['inline', 'list','colorPicker', 'link', 'emoji', 'image'],
-                            // inline: { inDropdown: true },
-                            // list: { inDropdown: true },
-                            // link: { inDropdown: true },
-                            // history: { inDropdown: true },
                         }}
                     />
                 </div>
@@ -149,16 +173,13 @@ export default class AddPost extends Component {
                         value={this.state.post.tags} 
                         onChange={this.handleTagsChange} 
                         onlyUnique={true}
-                        /> 
-                   
+                        />
                 </div>
 
-                {/* <div dangerouslySetInnerHTML={{ __html: this.state.content}} />  */}
-                <button onClick={this.saveData} type="submit" className="btn btn-primary rounded-pill">Save Data</button>
+                <button onClick={this.saveData} type="submit" className="btn btn-primary rounded-pill">Save Changes</button>
                 </form>
-
             </React.Fragment>
-         );
+        )
     }
-}
 
+}

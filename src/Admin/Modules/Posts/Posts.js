@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import ShowPosts from './ShowPosts'
 import AddPost from './AddPost'
+import EditPost from './EditPost'
 
 import firebaseDB from '../../../firebase'
 
@@ -13,7 +14,8 @@ export default class Posts extends Component{
         super(props)
 
         this.state = {
-            action: 1
+            action: 1,
+            postId: 0
         }
     }
 
@@ -29,10 +31,7 @@ export default class Posts extends Component{
                newKey: snapshot.child('id').val() + 1
            })
           });
-
-       
     }
-
 
     addPostBtn = () => {
         this.setState({
@@ -87,13 +86,24 @@ export default class Posts extends Component{
 
     }
 
+    editPost = (id) =>{
+        this.setState({
+            action : 3,
+            postId: id
+        })
+
+    }
+
     PageSwitch = (params) =>{
         switch (params) {
             case 1:
-                return <ShowPosts addPostBtn={this.addPostBtn} />
+                return <ShowPosts addPostBtn={this.addPostBtn} editPost={this.editPost}/>
     
             case 2:
                 return <AddPost showPostsBtn={this.showPostsBtn} savePost={this.savePost}/>
+
+            case 3:
+                return <EditPost showPostsBtn={this.showPostsBtn} postId={this.state.postId}/>
         
             default:
                 return null;
@@ -102,6 +112,8 @@ export default class Posts extends Component{
 
     //showposts = 1
     //addpost = 2
+    //editpost = 3
+
     render(){
         return(
             <React.Fragment>

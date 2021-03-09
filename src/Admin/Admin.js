@@ -32,9 +32,9 @@ export default class Admin extends Component {
 
                       <div className="col-2 p-0">
                         <div className="list-group ">
-                            <NavLink exact={true} activeClassName="active bg-dark" to="/" className="list-group-item list-group-item-action bg-light rounded-pill border-0 my-1">Dashboard</NavLink>
-                            <NavLink activeClassName="active bg-dark" to="/posts" className="list-group-item list-group-item-action bg-light rounded-pill border-0 my-1">Posts</NavLink>
-                            <NavLink activeClassName="active bg-dark" to="/settings" className="list-group-item list-group-item-action bg-light rounded-pill border-0 my-1">Settings</NavLink>
+                            <NavLink exact={true} activeClassName="active bg-dark" to="/admin" className="list-group-item list-group-item-action bg-light rounded-pill border-0 my-1">Dashboard</NavLink>
+                            <NavLink activeClassName="active bg-dark" to="/admin/posts" className="list-group-item list-group-item-action bg-light rounded-pill border-0 my-1">Posts</NavLink>
+                            <NavLink activeClassName="active bg-dark" to="/admin/settings" className="list-group-item list-group-item-action bg-light rounded-pill border-0 my-1">Settings</NavLink>
                         </div>
                       </div>
 
@@ -47,13 +47,13 @@ export default class Admin extends Component {
                       <div className="px-4 py-3 bg-white rounded-3">
 
                         <Switch>
-                            <Route exact path="/">
+                            <Route exact path="/admin">
                                 <Dashboard />
                             </Route>
-                            <Route path="/posts">
+                            <Route path="/admin/posts">
                                 <Posts />
                             </Route>
-                            <Route path="/settings">
+                            <Route path="/admin/settings">
                               <Settings />
                             </Route>
                         </Switch>

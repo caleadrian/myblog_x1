@@ -10,12 +10,10 @@ export default class ShowPosts extends Component{
         this.state = {
             posts: {}
         }
-    
     }
 
     componentDidMount(){
         this.getPosts()
-
         console.log('data loaded')
     }
 
@@ -33,8 +31,9 @@ export default class ShowPosts extends Component{
 
     }
 
-
-
+    editPost = (id) =>{
+        this.props.editPost(id)
+    }
 
  render(){
     return(
@@ -70,24 +69,14 @@ export default class ShowPosts extends Component{
                                                         <td>{this.state.posts[id].status}</td>
                                                         <td>{this.state.posts[id].date}</td>
 
-                                                        <td>
+                                                        <td className="w-20">
                                                             {
-
-
-                                                                this.state.posts[id].tags != null && <Tags />
-                                                                    // this.state.posts[id].tags.map(function(item, i){
-                                                                    //      return 
-                                                                    //          (this.state.posts[id].tags.count() ) 
-                                                                    //          ? <span key={i} className="badge rounded-pill bg-dark px-3 py-2 me-1">{item}</span> 
-                                                                    //          : <span key={i} className="badge rounded-pill bg-dark px-3 py-2 me-1">...</span> 
-
-                                                                    //  })
-                        
-
+                                                                 this.state.posts[id].tags != null && 
+                                                                 <Tags tags={this.state.posts[id].tags} />
                                                             }
                                                         </td>
-                                                        <td><i className="bi bi-pencil-square"></i></td>
-                                                        <td><i className="bi bi-three-dots-vertical"></i></td>
+                                                        <td><i onClick={() => this.editPost(this.state.posts[id].id)} className="link-primary bi bi-pencil-square"></i></td>
+                                                        <td><i className="link-primary bi bi-three-dots-vertical"></i></td>
                                                     </tr>
                                         })
                                     }

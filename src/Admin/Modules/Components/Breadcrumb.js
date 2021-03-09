@@ -2,9 +2,9 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom';
 
 const routes = {
-  '/': 'Home',
-  '/settings': 'Settings',
-  '/posts': 'Posts',
+  '/admin': 'Home',
+  '/admin/settings': 'Settings',
+  '/admin/posts': 'Posts',
 };
 
 const findRouteName = url => routes[url];
@@ -28,9 +28,7 @@ const BreadcrumbsItem = ({ match, ...rest }) => {
   if (routeName) {
     return (
       match.isExact ?
-      (
-        <li className="breadcrumb-item active" aria-current="page">{routeName}</li>
-      ) :
+      (<li className="breadcrumb-item active" aria-current="page">{routeName}</li>) :
       (
         <li className="breadcrumb-item">
           <Link to={match.url || ''}>
@@ -47,19 +45,17 @@ const Breadcrumbs = ({ location : { pathname }, match, ...rest }) => {
   const paths = getPaths(pathname);
   return (
     <ol className="breadcrumb py-2">
-      {paths.map(function(p ,index) {
-        return (
-          <Route key={index} path={p} component={BreadcrumbsItem} />
-        )
+      {paths.map(function(p,i) {
+
+        return (<Route key={i} path={p} component={BreadcrumbsItem} />)
+
       })}
     </ol>
   );
 };
 
 const props = () => (
-  <div>
-    <Route path="/:path" component={Breadcrumbs} {...props} />
-  </div>
+  <React.Fragment><Route path="/:path" component={Breadcrumbs} {...props} /></React.Fragment>
 );
 
 export default props
