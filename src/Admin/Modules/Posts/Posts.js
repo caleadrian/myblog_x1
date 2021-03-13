@@ -103,7 +103,7 @@ export default class Posts extends Component{
                 return <AddPost showPostsBtn={this.showPostsBtn} savePost={this.savePost}/>
 
             case 3:
-                return <EditPost showPostsBtn={this.showPostsBtn} postId={this.state.postId}/>
+                return <EditPost showPostsBtn={this.showPostsBtn} savePost={this.savePost} postId={this.state.postId}/>
         
             default:
                 return null;

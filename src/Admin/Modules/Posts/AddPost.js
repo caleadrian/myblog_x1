@@ -30,7 +30,7 @@ export default class AddPost extends Component {
 
 
     onEditorStateChange = (editorState) => {
-        var convertedData = convertToRaw(this.state.editorState.getCurrentContent());
+        var convertedData = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
 
         this.setState({
             editorState,
@@ -45,17 +45,17 @@ export default class AddPost extends Component {
         return stateToHTML(convertFromRaw(text)) 
     }
 
-    saveData = () =>{
-        var convertedData = convertToRaw(this.state.editorState.getCurrentContent());
+    // saveData = () =>{
+    //     var convertedData = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
 
-        this.setState({
-            data: convertedData
-          });
+    //     this.setState({
+    //         data: convertedData
+    //       });
 
-          console.log('Save data:', this.state.editorState.getCurrentContent())
+    //       console.log('Save data:', this.state.editorState.getCurrentContent())
 
-          this.setState({editorState: EditorState.createEmpty()})
-    }
+    //       this.setState({editorState: EditorState.createEmpty()})
+    // }
 
     loadData = () =>{
         var convertedData = this.convertCommentFromJSONToHTML(this.state.data)
@@ -64,14 +64,14 @@ export default class AddPost extends Component {
         })
     }
 
-    editData =() =>{
-        var convertedData = this.convertCommentFromJSONToHTML(this.state.data);  
-        this.setState({
-            editorState: EditorState.createWithContent(ContentState.createFromBlockArray(
-               convertFromHTML(convertedData) 
-            ))
-        })
-    }
+    // editData =() =>{
+    //     var convertedData = this.convertCommentFromJSONToHTML(this.state.data);  
+    //     this.setState({
+    //         editorState: EditorState.createWithContent(ContentState.createFromBlockArray(
+    //            convertFromHTML(convertedData) 
+    //         ))
+    //     })
+    // }
 
     handleChange = (e) => {
         this.setState({
@@ -82,8 +82,18 @@ export default class AddPost extends Component {
         })
     }
 
+    // cookPostData = () =>{
+    //     const rawState = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+    //     this.setState({
+    //         post:{
+    //             content: rawState
+    //         }
+    //     })
+    // }
+
     handleSubmit = (e) =>{
         e.preventDefault()
+        // this.cookPostData()
         this.props.savePost(this.state.post)
         this.clearData()
     }

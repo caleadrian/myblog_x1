@@ -30,23 +30,27 @@ export default class AddPost extends Component {
         this.getDataById(this.props.postId)
     }
 
-
-
     getDataById = (id) =>{
-        var arr = [];
+        let arr = [];
+        let shitContent =  [];
         firebaseDB.child('posts').orderByChild('id').equalTo(id)
             .on('value', snapshot =>{
             if (snapshot.exists()) {
-                arr = snapshot.val()
 
+                snapshot.forEach((child) => {
+                    arr.push(child.val());
+                });
 
-                 console.log(arr)
-
-                // this.setState({
-                //     post: {
-                //         tags: array
-                //     }
-                // })
+                shitContent = JSON.parse(arr[0].content)
+               
+                this.setState({
+                    post: {
+                        ...arr[0]
+                    },
+                    editorState: EditorState.createWithContent(
+                        convertFromRaw(shitContent)
+                    )
+                })
 
               }
               else {
@@ -54,7 +58,6 @@ export default class AddPost extends Component {
               }
         })
     }
-
 
     onEditorStateChange = (editorState) => {
         var convertedData = convertToRaw(this.state.editorState.getCurrentContent());
@@ -82,22 +85,6 @@ export default class AddPost extends Component {
           console.log('Save data:', this.state.editorState.getCurrentContent())
 
           this.setState({editorState: EditorState.createEmpty()})
-    }
-
-    loadData = () =>{
-        var convertedData = this.convertCommentFromJSONToHTML(this.state.data)
-        this.setState({
-            content: convertedData
-        })
-    }
-
-    editData =() =>{
-        var convertedData = this.convertCommentFromJSONToHTML(this.state.data);  
-        this.setState({
-            editorState: EditorState.createWithContent(ContentState.createFromBlockArray(
-               convertFromHTML(convertedData) 
-            ))
-        })
     }
 
     handleChange = (e) => {
@@ -157,7 +144,6 @@ export default class AddPost extends Component {
                         toolbarClassName="form-control"
                         wrapperClassName="wrapperClassName"
                         editorClassName="form-control border-muted"
-                        
                         onEditorStateChange={this.onEditorStateChange}
                         toolbar={{
                             options: ['inline', 'list','colorPicker', 'link', 'emoji', 'image'],
@@ -176,7 +162,7 @@ export default class AddPost extends Component {
                         />
                 </div>
 
-                <button onClick={this.saveData} type="submit" className="btn btn-primary rounded-pill">Save Changes</button>
+                <button type="submit" className="btn btn-primary rounded-pill">Save Changes</button>
                 </form>
             </React.Fragment>
         )
